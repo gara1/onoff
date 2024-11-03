@@ -1,0 +1,58 @@
+L'errore `EADDRINUSE: address already in use :::8080` indica che la porta `8080` è già occupata da un altro processo. Questo succede spesso se un'altra istanza del server è ancora in esecuzione o se un'altra applicazione sta già utilizzando quella porta.
+
+Ecco come risolverlo:
+
+### Opzione 1: Terminare il Processo che Usa la Porta 8080
+
+1. **Trova il processo** che sta usando la porta `8080`.
+   - Su **Windows**: apri il terminale e digita:
+     ```bash
+     netstat -ano | findstr :8080
+     ```
+     Questo mostrerà l'ID del processo (PID) che sta usando la porta `8080`.
+
+   - Su **macOS** o **Linux**:
+     ```bash
+     lsof -i :8080
+     ```
+     Anche qui, vedrai l'ID del processo (PID).
+
+2. **Termina il processo** con l'ID trovato.
+   - Su **Windows**: usa il comando
+     ```bash
+     taskkill /PID <PID> /F
+     ```
+   - Su **macOS** o **Linux**: usa
+     ```bash
+     kill -9 <PID>
+     ```
+
+   Sostituisci `<PID>` con l'ID del processo trovato al passaggio precedente.
+
+### Opzione 2: Cambiare la Porta del Server
+
+Se preferisci evitare di liberare la porta 8080, puoi cambiare il numero di porta nel file `server.js`. Modifica questa riga:
+
+```javascript
+const wss = new WebSocket.Server({ port: 8080 });
+```
+
+Sostituisci `8080` con un numero di porta diverso, ad esempio `3000`:
+
+```javascript
+const wss = new WebSocket.Server({ port: 3000 });
+```
+
+Poi salva il file e avvia di nuovo il server con:
+
+```bash
+node server.js
+```
+
+Nel client (`index.html`), assicurati di aggiornare l’indirizzo WebSocket per corrispondere alla nuova porta:
+
+```javascript
+ws = new WebSocket('ws://localhost:3000');
+```
+
+Con queste modifiche, il server dovrebbe avviarsi senza problemi.

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multiplayer AND Gate Game</title>
+<style>
+  body { font-family: Arial, sans-serif; text-align: center; }
+  #status { font-size: 1.5em; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<h1>Multiplayer AND Gate Game</h1>
+<p>Each player controls one input of an AND gate. Set your input and see the result!</p>
+
+<button id="input-button">Toggle Input</button>
+<p id="status">Waiting for connection...</p>
+<p id="result"></p>
+
+<script>
+let ws;
+let playerId;
+let inputState = false;
+
+function connectWebSocket() {
+  ws = new WebSocket('ws://localhost:3000');
+  
+  ws.onopen = () => {
+    document.getElementById('status').textContent = 'Connected! Waiting for another player...';
+  };
+
+  ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    
+    if (data.type === 'player') {
+      playerId = data.id;
+      document.getElementById('status').textContent = `You are Player ${playerId}`;
+    } else if (data.type === 'result') {
+      document.getElementById('result').textContent = `AND Gate Result: ${data.andResult ? 'ON' : 'OFF'}`;
+    } else if (data.type === 'error') {
+      document.getElementById('status').textContent = data.message;
+    }
+  };
+
+  ws.onclose = () => {
+    document.getElementById('status').textContent = 'Disconnected from server';
+  };
+}
+
+document.getElementById('input-button').onclick = () => {
+  inputState = !inputState;
+  ws.send(JSON.stringify({ type: 'input', player: playerId, state: inputState }));
+  document.getElementById('status').textContent = `Input set to: ${inputState ? 'ON' : 'OFF'}`;
+};
+
+connectWebSocket();
+</script>
+
+</body>
+</html>

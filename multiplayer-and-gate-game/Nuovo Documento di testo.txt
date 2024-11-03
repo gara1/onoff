@@ -1,0 +1,25 @@
+Portare questa soluzione su un sito WordPress richiede alcuni adattamenti, poiché il codice `Node.js` non può essere eseguito direttamente su WordPress, che generalmente funziona con PHP.
+
+### Opzioni per Integrare il Gioco Multiplayer con WordPress
+
+1. **Server Node.js Separato**  
+   Mantieni il server WebSocket (`server.js`) su un server Node.js separato o su un servizio come **Heroku**, **Render** o **Vercel**, che permette di ospitare applicazioni Node.js.  
+   - **Passaggi**:
+     1. Carica il file `server.js` su un server Node.js e configura l'hosting per mantenere il processo attivo.
+     2. Nel file `index.html`, aggiorna l'indirizzo WebSocket per puntare al nuovo server (ad es., `ws://tuo-nuovo-server:porta`).
+     3. Integra `index.html` come una pagina HTML indipendente su WordPress, o incorpora il codice HTML in una pagina o post con un plugin che consente di aggiungere HTML personalizzato.
+
+2. **Utilizzare un Plugin per WebSocket in WordPress**  
+   Se preferisci mantenere tutto in WordPress, puoi usare un plugin che supporti WebSocket (es. **WP WebSockets**). Tuttavia, con questa soluzione ci sono delle limitazioni perché i WebSocket su WordPress non saranno performanti come su un server Node.js, soprattutto per applicazioni in tempo reale.
+   - Configura il plugin WebSocket e implementa una logica simile a quella di `server.js` usando PHP o JavaScript, ma questa strada è più complessa e limitata per giochi in tempo reale.
+
+3. **Iframe per Incorporare il Gioco**  
+   Se ospiti il gioco su un server Node.js o su un servizio di hosting esterno, puoi incorporarlo in WordPress tramite un iframe.
+   - **Passaggi**:
+     1. Metti il gioco su un server o servizio separato.
+     2. Crea una pagina in WordPress e aggiungi un iframe che punti all'URL del gioco:
+        ```html
+        <iframe src="https://tuo-server-gioco.com" width="800" height="600"></iframe>
+        ```
+
+Se hai bisogno di aiuto per configurare una di queste opzioni, fammelo sapere!

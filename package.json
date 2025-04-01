@@ -1,0 +1,14 @@
+{
+  "name": "door-game",
+  "version": "1.0.0",
+  "description": "Gioco della porta con salvataggio dati",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "mysql2": "^3.14.0",
+    "socket.io": "^4.8.1"
+  }
+}
